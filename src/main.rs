@@ -2,13 +2,18 @@ extern crate image;
 use image::DynamicImage;
 use image::GenericImageView;
 
+const ASCII_BAND: &str = r#"`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"#;
+
 fn main() {
     println!("asciiart");
     // Use the open function to load an image from a Path.
     // `open` returns a `DynamicImage` on success.
     let img = load_image("tests/images/ascii-pineapple.jpg");
 
-    println!("{}", get_dimensions(img));
+    println!("{}", get_dimensions(&img));
+
+    let matrix = get_image_matrix(&img);
+    get_brightness_matrix(matrix);
 }
 
 fn load_image(filename: &str) -> DynamicImage {
@@ -17,7 +22,7 @@ fn load_image(filename: &str) -> DynamicImage {
     image::open(filename).unwrap()
 }
 
-fn get_dimensions(img: DynamicImage) -> String {
+fn get_dimensions(img: &DynamicImage) -> String {
     // The dimensions method returns the images width and height.
     format!(
         "Image size: {} x {}",
@@ -34,7 +39,7 @@ impl PartialEq for Rgb {
     }
 }
 
-fn get_image_matrix(img: DynamicImage) -> Vec<Vec<Rgb>> {
+fn get_image_matrix(img: &DynamicImage) -> Vec<Vec<Rgb>> {
     let (width, height) = img.dimensions();
     let mut matrix = Vec::with_capacity(height as usize);
     for y in 0..height {
@@ -63,32 +68,5 @@ fn get_brightness_matrix(rgb_matrix: Vec<Vec<Rgb>>) -> Vec<Vec<u8>> {
     matrix
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+fn get_ascii_matrix(brightness_matrix: Vec<Vec<u8>>) {}
 
-    #[test]
-    fn test_load_pineapple_image_and_show_dimensions() {
-        // Use the open function to load an image from a Path.
-        // `open` returns a `DynamicImage` on success.
-        let img = load_image("tests/images/ascii-pineapple.jpg");
-        let dims = get_dimensions(img);
-        assert_eq!("Image size: 700 x 467", dims);
-    }
-
-    #[test]
-    fn test_pixel_data_array() {
-        let img = load_image("tests/images/ascii-pineapple.jpg");
-        let matrix = get_image_matrix(img);
-
-        assert_eq!(matrix[0][0], Rgb(1, 116, 209));
-    }
-
-    #[test]
-    fn test_brightness_matrix() {
-        let img = load_image("tests/images/ascii-pineapple.jpg");
-        let matrix = get_image_matrix(img);
-        let brightness_matrix = get_brightness_matrix(matrix);
-        assert_eq!(brightness_matrix[0][0], 108);
-    }
-}
