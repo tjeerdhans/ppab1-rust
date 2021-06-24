@@ -2,8 +2,6 @@ extern crate image;
 use image::DynamicImage;
 use image::GenericImageView;
 
-const ASCII_BAND: &str = r#"`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"#;
-
 fn main() {
     println!("asciiart");
     // Use the open function to load an image from a Path.
@@ -75,8 +73,8 @@ fn get_brightness_matrix(rgb_matrix: &Vec<Vec<Rgb>>) -> Vec<Vec<u8>> {
 
 fn map_brightness_matrix_to_ascii(br_matrix: &Vec<Vec<u8>>) -> Vec<Vec<char>> {
     let mut matrix = Vec::with_capacity(br_matrix.len());
-    const BR_ASCII: &str = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
-    let ascii_bytes = BR_ASCII.as_bytes();
+    const ASCII_BAND: &str = r#"`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"#;
+    let ascii_bytes = ASCII_BAND.as_bytes();
     for row in br_matrix.iter() {
         let mut ascii_row = Vec::with_capacity(row.len()*3);
         for i in 0..row.len() {
