@@ -11,9 +11,13 @@ fn main() {
     let img = load_image("tests/images/ascii-pineapple.jpg");
 
     println!("{}", get_dimensions(&img));
-
     let matrix = get_image_matrix(&img);
-    get_brightness_matrix(matrix);
+    let brightness_matrix = get_brightness_matrix(&matrix);
+    let ascii_matrix = map_brightness_matrix_to_ascii(&brightness_matrix);
+    for row in ascii_matrix.iter() {
+        let s: String = row.iter().collect();
+        println!("{}", s);
+    }
 }
 
 fn load_image(filename: &str) -> DynamicImage {
@@ -30,6 +34,7 @@ fn get_dimensions(img: &DynamicImage) -> String {
         img.dimensions().1
     )
 }
+
 #[derive(Debug, Eq)]
 struct Rgb(u8, u8, u8);
 
@@ -54,7 +59,7 @@ fn get_image_matrix(img: &DynamicImage) -> Vec<Vec<Rgb>> {
     matrix
 }
 
-fn get_brightness_matrix(rgb_matrix: Vec<Vec<Rgb>>) -> Vec<Vec<u8>> {
+fn get_brightness_matrix(rgb_matrix: &Vec<Vec<Rgb>>) -> Vec<Vec<u8>> {
     let mut matrix = Vec::with_capacity(rgb_matrix.len());
     for row in rgb_matrix.iter() {
         let mut brightness_row = Vec::with_capacity(row.len());
@@ -68,5 +73,23 @@ fn get_brightness_matrix(rgb_matrix: Vec<Vec<Rgb>>) -> Vec<Vec<u8>> {
     matrix
 }
 
-fn get_ascii_matrix(brightness_matrix: Vec<Vec<u8>>) {}
+fn map_brightness_matrix_to_ascii(br_matrix: &Vec<Vec<u8>>) -> Vec<Vec<char>> {
+    let mut matrix = Vec::with_capacity(br_matrix.len());
+    const BR_ASCII: &str = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+    let ascii_bytes = BR_ASCII.as_bytes();
+    for row in br_matrix.iter() {
+        let mut ascii_row = Vec::with_capacity(row.len());
+        for i in 0..row.len() {
+            let b = row[i];
+            let idx = ((b as f32 / 256.0) * 66.0).floor() as usize;
+            let c: char = ascii_bytes[idx] as char;
+            ascii_row.push(c);
+        }
+        matrix.push(ascii_row)
+    }
 
+    matrix
+}
+
+#[cfg(test)]
+mod tests;
