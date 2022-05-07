@@ -30,6 +30,6 @@ fn test_brightness_matrix_to_ascii() {
     let img = load_image("tests/images/ascii-pineapple.jpg");
     let matrix = get_image_matrix(&img);
     let brightness_matrix = get_brightness_matrix(&matrix);
-    let ascii_matric = map_brightness_matrix_to_ascii(&brightness_matrix);
-    assert_eq!(ascii_matric[0][0], 'j');
+    let ascii_matrix = map_brightness_matrix_to_ascii(&brightness_matrix);
+    assert_eq!(ascii_matrix[0][0], 't');
 }
