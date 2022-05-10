@@ -77,8 +77,8 @@ fn map_brightness_matrix_to_ascii(br_matrix: &Vec<Vec<u8>>) -> Vec<Vec<char>> {
     let ascii_bytes = ASCII_BAND.as_bytes();
     for row in br_matrix.iter() {
         let mut ascii_row = Vec::with_capacity(row.len()*3);
-        for i in 0..row.len() {
-            let b = row[i];
+        for &b in row.iter() {
+            //let b = row[i];
             let idx = ((b as f32 / 256.0) * 66.0).floor() as usize;
             let c: char = ascii_bytes[idx] as char;
             for _ in 0..2 { // push three chars to make the image less squashed
